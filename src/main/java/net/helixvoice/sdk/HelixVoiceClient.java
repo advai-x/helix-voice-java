@@ -83,7 +83,7 @@ public final class HelixVoiceClient {
     }
 
     public byte[] downloadGeneration(String id) throws IOException, InterruptedException {
-        return http.wav("GET", "/v1/generations/" + VoiceTransport.segment(id) + "/audio", null).getAudio();
+        return http.wav("/v1/generations/" + VoiceTransport.segment(id) + "/audio");
     }
 
     public void deleteGeneration(String id) throws IOException, InterruptedException {

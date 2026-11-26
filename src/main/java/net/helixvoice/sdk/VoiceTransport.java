@@ -29,7 +29,7 @@ import java.util.concurrent.Flow;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-/** Shared by the API-key and anonymous clients. */
+/** HTTP transport for the authenticated developer API. */
 final class VoiceTransport {
     static final URI BASE_URL = URI.create("https://api.helixvoice.net");
     static final Duration TIMEOUT = Duration.ofSeconds(180);
@@ -109,11 +109,10 @@ final class VoiceTransport {
         throw failure(response, "Unexpected Helix Voice JSON response");
     }
 
-    HelixVoicePreviewClient.Result wav(String method, String route, Body body) throws IOException, InterruptedException {
-        var response = send(method, route, body, "audio/wav", MAX_WAV);
+    byte[] wav(String route) throws IOException, InterruptedException {
+        var response = send("GET", route, null, "audio/wav", MAX_WAV);
         if (!mediaType(response).equals("audio/wav")) throw failure(response, "Expected a WAV response");
-        byte[] audio = response.body().orElseThrow(() -> failure(response, "WAV exceeds the SDK response size limit"));
-        return new HelixVoicePreviewClient.Result(audio, header(response, "X-TTS-Preview-Cache"));
+        return response.body().orElseThrow(() -> failure(response, "WAV exceeds the SDK response size limit"));
     }
 
     void delete(String route) throws IOException, InterruptedException {
@@ -123,8 +122,8 @@ final class VoiceTransport {
 
     private HttpResponse<Optional<byte[]>> send(String method, String route, Body body, String accept, int limit)
             throws IOException, InterruptedException {
-        var request = HttpRequest.newBuilder(URI.create(baseUrl + route)).timeout(timeout).header("Accept", accept);
-        if (key != null) request.header("Authorization", "Bearer " + key);
+        var request = HttpRequest.newBuilder(URI.create(baseUrl + route)).timeout(timeout)
+                .header("Accept", accept).header("Authorization", "Bearer " + key);
         var publisher = HttpRequest.BodyPublishers.noBody();
         if (body != null) {
             request.header("Content-Type", body.contentType);
