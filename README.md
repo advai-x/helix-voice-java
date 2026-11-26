@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <a href="https://docs.helixvoice.net/">Developer Docs</a> ·
+  <a href="https://docs.helixvoice.net/en/api/sdks/">Developer Docs</a> ·
   <a href="examples/">Examples</a> ·
   <a href="https://github.com/Advai-X/helix-voice-java/releases/latest">Release Notes</a>
 </p>
@@ -79,6 +79,24 @@ mvn compile org.codehaus.mojo:exec-maven-plugin:3.5.0:java -Dexec.mainClass=exam
 
 On success, `speech.wav` is saved in your current directory and the generation ID is printed. See also the [repository example](examples/src/main/java/example/Speech.java).
 
+## Usage examples
+
+- [Transcribe a local audio file](examples/src/main/java/example/Transcribe.java) and print its Mandarin transcript. [Transcription guide](https://docs.helixvoice.net/en/api/sdks/#transcribe-audio)
+- [Clone a private voice](examples/src/main/java/example/CloneVoice.java) with reference audio, its transcript, and the speaker's explicit consent. [Voice cloning guide](https://docs.helixvoice.net/en/api/sdks/#clone-a-voice)
+- [List retained generations or download a WAV](examples/src/main/java/example/DownloadHistory.java) by generation ID. Running the example without an ID lists the records. [Download guide](https://docs.helixvoice.net/en/api/sdks/#download-generation-history)
+
+## SDK methods
+
+| Task | SDK methods | Required scopes |
+| --- | --- | --- |
+| Read service capabilities and limits | `getCapabilities` | `capabilities:read` |
+| List public and account-owned voices | `listVoices` | `voices:read` |
+| [Generate metadata or save speech as WAV](examples/src/main/java/example/Speech.java) | `generateSpeech`, `saveSpeech` | `speech:write`, plus `generations:read` when saving |
+| Transcribe a Mandarin audio file | `createTranscription` | `transcriptions:write` |
+| Clone or delete a private voice | `cloneVoice`, `deleteVoice` | `voices:write` |
+| List generations or download WAV audio | `listGenerations`, `downloadGeneration` | `generations:read` |
+| Delete a generation | `deleteGeneration` | `generations:write` |
+
 ## API keys and account access
 
 For production use, ask your account administrator for a scoped API key and set `HELIXVOICE_API_KEY` in your server environment. The speech example needs `voices:read` to look up a voice, `speech:write` to generate speech, and `generations:read` to download the WAV. Keep the key in server-side secret storage. [API keys and scopes](https://docs.helixvoice.net/en/api/authentication/)
@@ -87,17 +105,7 @@ The examples default to `https://api.helixvoice.net`. Set `HELIXVOICE_BASE_URL` 
 
 ## Capabilities and scopes
 
-| Operation | Required scope |
-| --- | --- |
-| Read service capabilities and limits | `capabilities:read` |
-| List public and account-owned voices | `voices:read` |
-| Clone or delete an owned voice | `voices:write` |
-| Generate speech metadata | `speech:write` |
-| Transcribe a Mandarin audio file | `transcriptions:write` |
-| List generations or download WAV audio | `generations:read` |
-| Delete generation history | `generations:write` |
-
-Voice cloning requires explicit consent. Consult the capabilities response for the limits of your environment. [Developer API reference](https://docs.helixvoice.net/en/api/speech/)
+See [SDK methods](#sdk-methods) for the scope of each operation. Voice cloning requires the speaker's explicit consent. Consult the capabilities response for the limits of your environment. [Developer API reference](https://docs.helixvoice.net/en/api/speech/)
 
 ## Troubleshooting
 
