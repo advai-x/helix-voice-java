@@ -5,7 +5,7 @@
     <artifactId>helix-voice-sdk-java</artifactId>
     <packaging>jar</packaging>
     <name>helix-voice-sdk-java</name>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
     <url>https://github.com/advai-x/helix-voice-java</url>
     <description>Helix Voice server SDK</description>
     <scm>

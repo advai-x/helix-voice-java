@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.helixvoice.examples</groupId>
     <artifactId>helix-voice-java-examples</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 
     <properties>
         <maven.compiler.release>11</maven.compiler.release>
@@ -15,7 +15,7 @@
         <dependency>
             <groupId>net.helixvoice</groupId>
             <artifactId>helix-voice-sdk-java</artifactId>
-            <version>0.1.0</version>
+            <version>0.2.0</version>
         </dependency>
     </dependencies>
 
