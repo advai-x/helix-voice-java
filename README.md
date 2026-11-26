@@ -4,19 +4,11 @@ Use the Helix Voice developer API to generate speech, transcribe audio, and mana
 
 ## Install
 
-Requires JDK 11 or later and Maven 3. Download and extract the [v0.1.0 ZIP from GitHub](https://github.com/advai-x/helix-voice-java/releases/tag/v0.1.0).
+Requires JDK 11 or later and Maven 3.
 
-From the extracted directory, install the SDK and its POM into your local Maven repository.
+### Maven Central
 
-```sh
-mvn org.apache.maven.plugins:maven-install-plugin:3.1.4:install-file \
-  -Dfile=helix-voice-sdk-java-0.1.0.jar \
-  -DpomFile=helix-voice-sdk-java-0.1.0.pom \
-  -Dsources=helix-voice-sdk-java-0.1.0-sources.jar \
-  -Djavadoc=helix-voice-sdk-java-0.1.0-javadoc.jar
-```
-
-Add this dependency to your project's `pom.xml`. The examples already declare it.
+Add this dependency to your project's `pom.xml`. Maven resolves it from Central. [Maven Central artifacts](https://repo.maven.apache.org/maven2/net/helixvoice/helix-voice-sdk-java/0.1.0/)
 
 ```xml
 <dependency>
@@ -26,9 +18,23 @@ Add this dependency to your project's `pom.xml`. The examples already declare it
 </dependency>
 ```
 
+### Alternative install from the GitHub release
+
+Download and extract the [v0.1.0 ZIP from GitHub](https://github.com/advai-x/helix-voice-java/releases/tag/v0.1.0). From the extracted directory, install the SDK and its POM into your local Maven repository.
+
+```sh
+mvn org.apache.maven.plugins:maven-install-plugin:3.1.4:install-file \
+  -Dfile=helix-voice-sdk-java-0.1.0.jar \
+  -DpomFile=helix-voice-sdk-java-0.1.0.pom \
+  -Dsources=helix-voice-sdk-java-0.1.0-sources.jar \
+  -Djavadoc=helix-voice-sdk-java-0.1.0-javadoc.jar
+```
+
+Then add the [dependency above](#maven-central) to your project.
+
 ## Quickstart
 
-After the local install, run the examples from a checkout of this repository.
+Run the speech example from a checkout of this repository. The example project already declares the SDK dependency.
 
 ```sh
 export HELIXVOICE_API_KEY='YOUR_API_KEY'
