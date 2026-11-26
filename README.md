@@ -1,6 +1,22 @@
-# Helix Voice SDK for Java
+<p align="center">
+  <img src="https://docs.helixvoice.net/helix-voice-touch-icon.png" alt="Helix Voice" width="64">
+</p>
 
-Use the Helix Voice developer API to generate speech, transcribe audio, and manage voices from a Java service.
+<h1 align="center">Helix Voice SDK for Java</h1>
+
+<p align="center">
+  Generate speech, transcribe audio, and manage voices from your Java application.
+</p>
+
+<p align="center">
+  <a href="https://central.sonatype.com/artifact/net.helixvoice/helix-voice-sdk-java"><img src="https://img.shields.io/maven-central/v/net.helixvoice/helix-voice-sdk-java" alt="Maven Central version"></a>
+</p>
+
+<p align="center">
+  <a href="https://docs.helixvoice.net/">Developer Docs</a> ·
+  <a href="examples/">Examples</a> ·
+  <a href="https://github.com/Advai-X/helix-voice-java/releases/latest">Release Notes</a>
+</p>
 
 ## Install
 
@@ -18,30 +34,50 @@ Add this dependency to your project's `pom.xml`. Maven resolves it from Central.
 </dependency>
 ```
 
-### Alternative install from the GitHub release
-
-Download and extract the [v0.2.0 ZIP from GitHub](https://github.com/advai-x/helix-voice-java/releases/tag/v0.2.0). From the extracted directory, install the SDK and its POM into your local Maven repository.
-
-```sh
-mvn org.apache.maven.plugins:maven-install-plugin:3.1.4:install-file \
-  -Dfile=helix-voice-sdk-java-0.2.0.jar \
-  -DpomFile=helix-voice-sdk-java-0.2.0.pom \
-  -Dsources=helix-voice-sdk-java-0.2.0-sources.jar \
-  -Djavadoc=helix-voice-sdk-java-0.2.0-javadoc.jar
-```
-
-Then add the [dependency above](#maven-central) to your project.
+See [alternative installation](#alternative-install-from-the-github-release) for the GitHub release ZIP.
 
 ## Quickstart
 
-Run the speech example from a checkout of this repository. The example project already declares the SDK dependency.
+Set `HELIXVOICE_API_KEY` to a server-side API key with `voices:read`, `speech:write`, and `generations:read` scopes.
 
 ```sh
 export HELIXVOICE_API_KEY='YOUR_API_KEY'
-mvn -f examples/pom.xml compile exec:java -Dexec.mainClass=example.Speech
 ```
 
-The [speech example](examples/src/main/java/example/Speech.java) chooses the first available voice returned by `listVoices`, calls `saveSpeech`, and writes `speech.wav`. It prints the voice and generation IDs.
+Save this as `src/main/java/example/Speech.java` in your Maven project. For a new project, use the [example POM](examples/pom.xml) as a starting point.
+
+```java
+package example;
+
+import java.net.URI;
+import java.nio.file.Path;
+import java.time.Duration;
+import net.helixvoice.sdk.HelixVoiceClient;
+
+public final class Speech {
+    public static void main(String[] args) throws Exception {
+        var apiKey = System.getenv("HELIXVOICE_API_KEY");
+        var baseUrl = URI.create(System.getenv().getOrDefault(
+                "HELIXVOICE_BASE_URL", "https://api.helixvoice.net"));
+        var client = new HelixVoiceClient(apiKey, baseUrl, Duration.ofSeconds(180));
+        var voices = client.listVoices();
+        if (voices.isEmpty()) {
+            throw new IllegalStateException("No voices are available to this account.");
+        }
+
+        var generation = client.saveSpeech("Hello from Helix Voice.", voices.get(0).getId(), Path.of("speech.wav"));
+        System.out.printf("Saved speech.wav (generation %s)%n", generation.getId());
+    }
+}
+```
+
+From the directory containing your `pom.xml`, run:
+
+```sh
+mvn compile org.codehaus.mojo:exec-maven-plugin:3.5.0:java -Dexec.mainClass=example.Speech
+```
+
+On success, `speech.wav` is saved in your current directory and the generation ID is printed. See also the [repository example](examples/src/main/java/example/Speech.java).
 
 ## API keys and account access
 
@@ -75,3 +111,17 @@ Keep the request ID when investigating an API error. [Errors and rate limits](ht
 ## License
 
 Licensed under the [Apache License, Version 2.0](LICENSE).
+
+## Alternative install from the GitHub release
+
+Download and extract the [v0.2.0 ZIP from GitHub](https://github.com/advai-x/helix-voice-java/releases/tag/v0.2.0). From the extracted directory, install the SDK and its POM into your local Maven repository.
+
+```sh
+mvn org.apache.maven.plugins:maven-install-plugin:3.1.4:install-file \
+  -Dfile=helix-voice-sdk-java-0.2.0.jar \
+  -DpomFile=helix-voice-sdk-java-0.2.0.pom \
+  -Dsources=helix-voice-sdk-java-0.2.0-sources.jar \
+  -Djavadoc=helix-voice-sdk-java-0.2.0-javadoc.jar
+```
+
+Then add the [dependency above](#maven-central) to your project.
